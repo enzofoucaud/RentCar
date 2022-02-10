@@ -2,7 +2,7 @@
 
 namespace RentCar
 {
-    public class Class1
+    public class Car
     {
     }
 }
