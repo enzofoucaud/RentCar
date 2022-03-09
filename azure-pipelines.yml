@@ -1,4 +1,7 @@
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+
 - task: SpecFlowPlus@0
   inputs:
     generatorSource: 'FeatureFolder'
-    projectFilePath: 'SpecFlowRentCar\Features'
