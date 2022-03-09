@@ -1,3 +1,13 @@
 - task: SpecFlowPlus@0
   inputs:
-    generatorSource: 'FeatureFolder'
+    #generatorSource: 'FeatureFolder' # Required. Options: FeatureFolder, TestAssembly, FeatureData
+    #projectFilePath:  # Required when generatorSource == FeatureFolder
+    #testAssemblyFilePath:  # Required when generatorSource == TestAssembly
+    #featureDataJsonFilePath:  # Required when generatorSource == FeatureData
+    #projectName: # Optional
+    #testExecutionJson: # Optional
+    #projectLanguage: 'en' # Optional
+    #workItemPrefix: # Optional
+    #workItemUrlTemplate: # Optional
+    #bindingAssemblies: # Optional
+    #output: # Optional
