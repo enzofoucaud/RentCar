@@ -8,8 +8,11 @@ Link to a feature: [Calculator](SpecFlowRentCar/Features/Calculator.feature)
 Background: 
 	Given following existing clients
 	| Email               | Password | Firstname | Lastname   | Birthday   | License_ID | License_date |
-	| foucauden@gmail.com | coolcar  | Enzo      | Foucaud    | 05/10/1999 | 158963257  | 01/05/2019   |
-	| yanis@gmail.com     | supercar | Yanis     | Parmentier | 03/03/1998 | 158745990  | 05/03/2019   |
+	| foucauden@gmail.com | coolcar  | Enzo      | Foucaud    | 05/10/1990 | 158963257  | 01/05/2019   |
+	| yanis@gmail.com     | supercar | Yanis     | Parmentier | 03/03/1990 | 158745990  | 05/03/2019   |
+	| mineur@gmail.com    | mineur   | Mineur    | Mineur     | 20/12/2004 | 158745990  | 05/03/2019   |
+	| jeune@gmail.com     | jeune    | Jeune     | Jeune      | 20/12/2002 | 158745990  | 05/03/2019   |
+	| jeunead@gmail.com   | jeunead  | Jeunead   | jeunead    | 20/12/1997 | 158745990  | 05/03/2019   |
 
 	Given following existing cars
 	| Matriculation | Brand   | Model     | Color  | Form_price | Cleaning_price | KM_price | Horsepower |
@@ -20,8 +23,8 @@ Background:
 
 	Given following existing bookings
 	| Client_email    | Car_matriculation | Start_date | End_date   | Estimated_distance | Estimated_price | Final_price | Car_returned  |
-	| yanis@gmail.com | DV-233-FR         | 02/11/2022 | 11/11/2022 | 100                | 1000            | 0            | false        |
-	| yanis@gmail.com | DV-234-FR         | 07/03/2022 | 13/03/2022 | 100                | 2800            | 0            | false        |
+	| yanis@gmail.com | DG-233-FR         | 02/11/2022 | 11/11/2022 | 100                | 1000            | 0            | false        |
+	| yanis@gmail.com | DB-234-FR         | 07/03/2022 | 13/03/2022 | 100                | 2800            | 0            | false        |
 
 # Général
 Scenario: Client account creation - Account registered
@@ -146,7 +149,7 @@ Scenario: A client is booking a car
 
 Scenario: A client is booking a car - Incorrect dates (end date is sooner then start date)
 	Given my email address is foucauden@gmail.com
-	And the car I want to book is DV-234-FR
+	And the car I want to book is DB-234-FR
 	And the booking start date is 10/04/2022
 	And the booking end date is 05/04/2022
 	And my estimation for the travelling distance is 100 km
@@ -155,7 +158,7 @@ Scenario: A client is booking a car - Incorrect dates (end date is sooner then s
 
 Scenario: A client is booking a car - Car is already booked on this dates
 	Given my email address is foucauden@gmail.com
-	And the car I want to book is DV-234-FR
+	And the car I want to book is DB-234-FR
 	And the booking start date is 08/03/2022
 	And the booking end date is 15/03/2022
 	And my estimation for the travelling distance is 100 km
@@ -171,3 +174,49 @@ Scenario: A client is booking a car - Client has already booked a car on this da
 	When I send the booking form
 	Then the message is You have already booked a car on these dates
 
+Scenario: A client is booking a car - Client age is under 18
+	Given my email address is mineur@gmail.com
+	And the car I want to book is DV-231-FR
+	And the booking start date is 03/11/2023
+	And the booking end date is 15/11/2023
+	And my estimation for the travelling distance is 100 km
+	When I send the booking form
+	Then the message is You cannot book this car because you are under 18
+
+Scenario: A client is booking a car - Client age is 19 (under 20) and books a car with less than 8 horsepower
+	Given my email address is jeune@gmail.com
+	And the car I want to book is DV-231-FR
+	And the booking start date is 03/11/2023
+	And the booking end date is 15/11/2023
+	And my estimation for the travelling distance is 100 km
+	When I send the booking form
+	Then the estimated price is 330 euros
+	And the message is Congratulations, your booking is confirmed
+
+Scenario: A client is booking a car - Client age is 19 (under 20) and books a car with 8 or more horsepower
+	Given my email address is jeune@gmail.com
+	And the car I want to book is DG-233-FR
+	And the booking start date is 03/11/2023
+	And the booking end date is 15/11/2023
+	And my estimation for the travelling distance is 100 km
+	When I send the booking form
+	Then the message is You cannot book this car with 8 or more horsepower because you are under 21
+
+Scenario: A client is booking a car - Client age is 24 (between 21 and 25) and books a car with less than 13 horsepower
+	Given my email address is jeunead@gmail.com
+	And the car I want to book is DV-231-FR
+	And the booking start date is 03/11/2023
+	And the booking end date is 15/11/2023
+	And my estimation for the travelling distance is 100 km
+	When I send the booking form
+	Then the estimated price is 330 euros
+	And the message is Congratulations, your booking is confirmed
+
+Scenario: A client is booking a car - Client age is 24 (between 21 and 25) and books a car with 13 or more horsepower
+	Given my email address is jeunead@gmail.com
+	And the car I want to book is DB-234-FR 
+	And the booking start date is 03/11/2023
+	And the booking end date is 15/11/2023
+	And my estimation for the travelling distance is 100 km
+	When I send the booking form
+	Then the message is You cannot book this car with 13 or more horsepower because you are under 25

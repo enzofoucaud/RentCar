@@ -122,6 +122,17 @@ namespace RentCar
                 }
             }
 
+            if(this.clientAge(booking) < 18)
+            {
+                return "You cannot book this car because you are under 18";
+            } else if (this.clientAge(booking) < 21 && this.carHorsepower(booking) >= 8)
+            {
+                return "You cannot book this car with 8 or more horsepower because you are under 21";
+            } else if (this.clientAge(booking) < 25 && this.carHorsepower(booking) >= 13)
+            {
+                return "You cannot book this car with 13 or more horsepower because you are under 25";
+            }
+
             this._dataLayer.Bookings.Add(booking);
             this.estimatePrice(booking);
             return "Congratulations, your booking is confirmed";
@@ -137,6 +148,30 @@ namespace RentCar
             Car result = this._dataLayer.Cars.SingleOrDefault(_ => _.Matriculation == booking.Car_matriculation);
             booking.Estimated_price = result.Form_price + result.Cleaning_price + (result.KM_price * booking.Estimated_distance);
             return booking.Estimated_price;
+        }
+
+
+        public int clientAge(Booking booking)
+        {
+            Client client = this._dataLayer.Clients.SingleOrDefault(_ => _.Email == booking.Client_email);
+            DateTime now = DateTime.Now;
+            DateTime birthdate = client.Birthday;
+
+            int age = now.Year - birthdate.Year;
+
+            if (now.Month < birthdate.Month || (now.Month == birthdate.Month && now.Day < birthdate.Day))
+            {
+                age--;
+            }
+
+            return age;
+        }
+
+        public int carHorsepower(Booking booking)
+        {
+            Car car = this._dataLayer.Cars.SingleOrDefault(_ => _.Matriculation == booking.Car_matriculation);
+
+            return car.Horsepower;
         }
     }
 }
